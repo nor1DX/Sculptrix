@@ -3,14 +3,17 @@ import javax.vecmath.Vector3f;
 import javax.vecmath.Matrix4f;
 
 public class Camera {
+    
+    private Vector3f position;
+    private Vector3f target;
+    private float fov;
+    private float aspectRatio;
+    private float nearPlane;
+    private float farPlane;
 
-    public Camera(
-            final Vector3f position,
-            final Vector3f target,
-            final float fov,
-            final float aspectRatio,
-            final float nearPlane,
-            final float farPlane) {
+    public Camera(final Vector3f position, final Vector3f target,
+                  final float fov, final float aspectRatio,
+                  final float nearPlane, final float farPlane) {
         this.position = position;
         this.target = target;
         this.fov = fov;
@@ -54,11 +57,5 @@ public class Camera {
     Matrix4f getProjectionMatrix() {
         return GraphicConveyor.perspective(fov, aspectRatio, nearPlane, farPlane);
     }
-
-    private Vector3f position;
-    private Vector3f target;
-    private float fov;
-    private float aspectRatio;
-    private float nearPlane;
-    private float farPlane;
+    
 }
