@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 class ObjReaderTest {
-
+    
     @Test
     public void testParseVertex01() {
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.01", "1.02", "1.03"));
@@ -16,7 +16,7 @@ class ObjReaderTest {
         Vector3f expectedResult = new Vector3f(1.01f, 1.02f, 1.03f);
         Assertions.assertTrue(result.equals(expectedResult));
     }
-
+    
     @Test
     public void testParseVertex02() {
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.01", "1.02", "1.03"));
@@ -24,7 +24,7 @@ class ObjReaderTest {
         Vector3f expectedResult = new Vector3f(1.01f, 1.02f, 1.10f);
         Assertions.assertFalse(result.equals(expectedResult));
     }
-
+    
     @Test
     public void testParseVertex03() {
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("ab", "o", "ba"));
@@ -35,7 +35,7 @@ class ObjReaderTest {
             Assertions.assertEquals(expectedError, exception.getMessage());
         }
     }
-
+    
     @Test
     public void testParseVertex04() {
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.0", "2.0"));
@@ -46,15 +46,15 @@ class ObjReaderTest {
             Assertions.assertEquals(expectedError, exception.getMessage());
         }
     }
-
+    
     @Test
     public void testParseVertex05() {
         // АГААА! Вот тест, который говорит, что у метода нет проверки на более, чем 3 числа
         // А такой случай лучше не игнорировать, а сообщать пользователю, что у него что-то не так
         // ассерт, чтобы не забыть про тест:
         Assertions.assertTrue(false);
-
-
+        
+        
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.0", "2.0", "3.0", "4.0"));
         try {
             ObjReader.parseVertex(wordsInLineWithoutToken, 10);
