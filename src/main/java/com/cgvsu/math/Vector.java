@@ -1,7 +1,6 @@
 package com.cgvsu.math;
 
 
-
 public interface Vector {
 
     double getData(int index);

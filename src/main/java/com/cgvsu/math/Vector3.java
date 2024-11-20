@@ -1,7 +1,6 @@
 package com.cgvsu.math;
 
 
-
 import java.util.Arrays;
 
 public class Vector3 implements Vector {

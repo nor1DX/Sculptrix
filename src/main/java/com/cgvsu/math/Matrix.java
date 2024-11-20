@@ -1,7 +1,6 @@
 package com.cgvsu.math;
 
 
-
 public interface Matrix {
     Matrix sum(Matrix other);
 
