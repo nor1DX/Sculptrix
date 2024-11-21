@@ -12,8 +12,7 @@ public class RenderEngine {
 
     public static void render(final GraphicsContext graphicsContext,
                               final Camera camera, final Model mesh,
-                              final int width, final int height)
-    {
+                              final int width, final int height) {
         Matrix4f modelMatrix = rotateScaleTranslate();
         Matrix4f viewMatrix = camera.getViewMatrix();
         Matrix4f projectionMatrix = camera.getProjectionMatrix();
