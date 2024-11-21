@@ -36,11 +36,10 @@ public class RenderEngine {
             }
 
             for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
-                graphicsContext.strokeLine(
-                        resultPoints.get(vertexInPolygonInd - 1).x,
-                        resultPoints.get(vertexInPolygonInd - 1).y,
-                        resultPoints.get(vertexInPolygonInd).x,
-                        resultPoints.get(vertexInPolygonInd).y);
+                graphicsContext.strokeLine(resultPoints.get(vertexInPolygonInd - 1).x,
+                                           resultPoints.get(vertexInPolygonInd - 1).y,
+                                           resultPoints.get(vertexInPolygonInd).x,
+                                           resultPoints.get(vertexInPolygonInd).y);
             }
 
             if (nVerticesInPolygon > 0)
