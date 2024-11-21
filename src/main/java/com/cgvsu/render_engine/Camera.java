@@ -1,4 +1,5 @@
 package com.cgvsu.render_engine;
+
 import javax.vecmath.Vector3f;
 import javax.vecmath.Matrix4f;
 
@@ -6,10 +7,10 @@ public class Camera {
     
     private Vector3f position;
     private Vector3f target;
-    private float fov;
+    private final float fov;
     private float aspectRatio;
-    private float nearPlane;
-    private float farPlane;
+    private final float nearPlane;
+    private final float farPlane;
 
     public Camera(final Vector3f position, final Vector3f target,
                   final float fov, final float aspectRatio,
