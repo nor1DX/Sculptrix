@@ -12,8 +12,7 @@ public class RenderEngine {
 
     public static void render(final GraphicsContext graphicsContext,
                               final Camera camera, final Model mesh,
-                              final int width, final int height)
-    {
+                              final int width, final int height) {
         Matrix4f modelMatrix = rotateScaleTranslate();
         Matrix4f viewMatrix = camera.getViewMatrix();
         Matrix4f projectionMatrix = camera.getProjectionMatrix();
@@ -45,11 +44,9 @@ public class RenderEngine {
             }
 
             if (nVerticesInPolygon > 0)
-                graphicsContext.strokeLine(
-                        resultPoints.get(nVerticesInPolygon - 1).x,
-                        resultPoints.get(nVerticesInPolygon - 1).y,
-                        resultPoints.get(0).x,
-                        resultPoints.get(0).y);
+                graphicsContext.strokeLine(resultPoints.get(nVerticesInPolygon - 1).x,
+                                           resultPoints.get(nVerticesInPolygon - 1).y,
+                                           resultPoints.get(0).x, resultPoints.get(0).y);
         }
     }
 }
