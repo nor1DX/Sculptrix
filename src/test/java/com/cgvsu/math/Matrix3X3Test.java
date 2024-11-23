@@ -1,5 +1,7 @@
 package com.cgvsu.math;
 
+
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -7,11 +9,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 class Matrix3X3Test {
-    private Matrix3X3 defM;
+    private  Matrix3X3 defM;
 
     @BeforeEach
     void setUp() {
-        double[][] matrix = {
+        final float[][] matrix = {
                 {1, 2, 3},
                 {4, 5, 6},
                 {7, 8, 9}
@@ -24,13 +26,13 @@ class Matrix3X3Test {
 
     @Test
     void sumWithPositiveNum() {
-        double[][] matrixSum = {
+        final float[][] matrixSum = {
                 {1, 2, 3},
                 {4, 5, 6},
                 {7, 8, 9}
         };
         Matrix3X3 mSum = new Matrix3X3(matrixSum);
-        double[][] expectedResult = {
+        final  float[][] expectedResult = {
                 {2, 4, 6},
                 {8, 10, 12},
                 {14, 16, 18}
@@ -49,13 +51,13 @@ class Matrix3X3Test {
 
     @Test
     void sumWithNegativeNun() {
-        double[][] matrixSum = {
+        final float [][] matrixSum = {
                 {-1, -2, -3},
                 {-8, -10, -12},
                 {-7, -16, -9}
         };
         Matrix3X3 mSum = new Matrix3X3(matrixSum);
-        double[][] expectedResult = {
+        final float [][] expectedResult = {
                 {0, 0, 0},
                 {-4, -5, -6},
                 {0, -8, 0}
@@ -74,13 +76,13 @@ class Matrix3X3Test {
 
     @Test
     void subtractWithPositiveNum() {
-        double[][] matrixSub = {
+        final  float[][] matrixSub = {
                 {1, 2, 10},
                 {4, 8, 6},
                 {4, 8, 9}
         };
         Matrix3X3 mSub = new Matrix3X3(matrixSub);
-        double[][] expectedResult = {
+        final float[][] expectedResult = {
                 {0, 0, -7},
                 {0, -3, 0},
                 {3, 0, 0}
@@ -100,13 +102,13 @@ class Matrix3X3Test {
 
     @Test
     void subtractWithNegativeNum() {
-        double[][] matrixSub = {
+        final  float[][] matrixSub = {
                 {-1, -2, -10},
                 {-4, -8, -6},
                 {-4, -8, -9}
         };
         Matrix3X3 mSub = new Matrix3X3(matrixSub);
-        double[][] expectedResult = {
+        final  float[][] expectedResult = {
                 {2, 4, 13},
                 {8, 13, 12},
                 {11, 16, 18}
@@ -126,9 +128,9 @@ class Matrix3X3Test {
 
     @Test
     void multiplyOnNullVector() {
-        final double[] s = {0, 0, 0};
+        final float[] s = {0, 0, 0};
         Vector scalar = new Vector3(s);
-        final double[] expRes = {0, 0, 0};
+        final float[] expRes = {0, 0, 0};
         Vector expectedResult = new Vector3(expRes);
 
         Vector result = defM.multiplyOnVector(scalar);
@@ -145,9 +147,9 @@ class Matrix3X3Test {
 
     @Test
     void multiplyOnVector() {
-        final double[] s = {0.5, -0.5, 4};
+        final float[] s = {0.5F, -0.5F, 4};
         Vector scalar = new Vector3(s);
-        final double[] mRes = {11.5, 23.5, 35.5};
+        final float[] mRes = {11.5F, 23.5F, 35.5F};
         Vector expectedResult = new Vector3(mRes);
 
         Vector result = defM.multiplyOnVector(scalar);
@@ -160,7 +162,7 @@ class Matrix3X3Test {
     @Test
     void multiplyOnMatrixWithPositiveNum() {
 
-        double[][] matrix2 = {
+        final float[][] matrix2 = {
                 {1, 1, 1},
                 {2, 2, 2},
                 {3, 3, 3}
@@ -168,7 +170,7 @@ class Matrix3X3Test {
 
         Matrix3X3 m2 = new Matrix3X3(matrix2);
 
-        double[][] expectedResult = {
+        final float [][] expectedResult = {
                 {14, 14, 14},
                 {32, 32, 32},
                 {50, 50, 50},
@@ -190,7 +192,7 @@ class Matrix3X3Test {
     @Test
     void multiplyOnMatrixWithNegativeNum() {
 
-        double[][] matrix2 = {
+        final float[][] matrix2 = {
                 {-1, -1, -1},
                 {-2, -8, -2},
                 {-3, -3, -13}
@@ -198,7 +200,7 @@ class Matrix3X3Test {
 
         Matrix3X3 m2 = new Matrix3X3(matrix2);
 
-        double[][] expectedResult = {
+        final float[][] expectedResult = {
                 {-14, -26, -44},
                 {-32, -62, -92},
                 {-50, -98, -140},
@@ -221,7 +223,7 @@ class Matrix3X3Test {
     @Test
     void transpose() {
 
-        double[][] expectedResult = {
+        final float[][] expectedResult = {
                 {1, 4, 7},
                 {2, 5, 8},
                 {3, 6, 9}
@@ -241,7 +243,7 @@ class Matrix3X3Test {
 
     @Test
     void single() {
-        double[][] expectedResult = {
+        final float[][] expectedResult = {
                 {1, 0, 0},
                 {0, 1, 0},
                 {0, 0, 1}
@@ -259,7 +261,7 @@ class Matrix3X3Test {
 
     @Test
     void zero() {
-        double[][] expectedResult = {
+        final float[][] expectedResult = {
                 {0, 0, 0},
                 {0, 0, 0},
                 {0, 0, 0}
