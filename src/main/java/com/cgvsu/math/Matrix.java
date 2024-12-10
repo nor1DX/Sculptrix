@@ -1,6 +1,5 @@
 package com.cgvsu.math;
 
-
 public interface Matrix {
     Matrix sum(Matrix other);
 
@@ -16,6 +15,6 @@ public interface Matrix {
 
     Matrix zero();
 
-    double[][] getMatrix();
-
+    float[][] getMatrix();
 }
+

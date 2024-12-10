@@ -1,6 +1,6 @@
 package com.cgvsu.math;
 
-// Это заготовка для собственной библиотеки для работы с линейной алгеброй
+// Это заготовка для собственной библиотеки для работы с линейной алгеброй и
 public class Vector3f {
     public Vector3f(float x, float y, float z) {
         this.x = x;

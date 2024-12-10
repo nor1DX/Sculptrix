@@ -1,23 +1,21 @@
 package com.cgvsu.math;
 
-
 public interface Vector {
 
-    double getData(int index);
+    float getData(int index);
 
     Vector sum(Vector other);
 
     Vector subtract(Vector other);
 
-    Vector multiplyOnScalar(double scalar);
+    Vector multiplyOnScalar(final float scalar);
 
-    Vector divisionOnScalar(double scalar);
+    Vector divisionOnScalar(final float scalar);
 
-    double length();
+    float length();
 
     Vector normalize();
 
     //скалярное произведение
-    double scalarProduct(Vector other);
-
+    float scalarProduct(Vector other);
 }
