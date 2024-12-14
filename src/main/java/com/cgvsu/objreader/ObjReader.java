@@ -1,6 +1,7 @@
 package com.cgvsu.objreader;
 
 import com.cgvsu.math.Vector2f;
+import com.cgvsu.math.Vector3;
 import com.cgvsu.math.Vector3f;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
@@ -55,12 +56,10 @@ public class ObjReader {
 	}
 
 	// Всем методам кроме основного я поставил модификатор доступа protected, чтобы обращаться к ним в тестах
-	protected static Vector3f parseVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
+	protected static Vector3 parseVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
 		try {
-			return new Vector3f(
-					Float.parseFloat(wordsInLineWithoutToken.get(0)),
-					Float.parseFloat(wordsInLineWithoutToken.get(1)),
-					Float.parseFloat(wordsInLineWithoutToken.get(2)));
+			float [] vertex = {Float.parseFloat(wordsInLineWithoutToken.get(0)),Float.parseFloat(wordsInLineWithoutToken.get(1)),Float.parseFloat(wordsInLineWithoutToken.get(2))};
+			return new Vector3(vertex);
 
 		} catch(NumberFormatException e) {
 			throw new ObjReaderException("Failed to parse float value.", lineInd);
