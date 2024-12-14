@@ -13,6 +13,8 @@ public class Matrix4X4 implements Matrix {
         this.matrix = matrix;
     }
 
+
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -58,7 +60,7 @@ public class Matrix4X4 implements Matrix {
     }
 
     @Override
-    public Vector multiplyOnVector(Vector vector) {
+    public Vector4 multiplyOnVector(Vector vector) {
         if (vector == null) {
             throw new IllegalArgumentException("Вектор не может быть null");
         }
@@ -75,7 +77,10 @@ public class Matrix4X4 implements Matrix {
     }
 
     @Override
-    public Matrix multiplyOnMatrix(Matrix other) {
+    public  Matrix4X4 multiplyOnMatrix(Matrix other) {
+        if (matrix.length != 4 || matrix[0].length != 4 || other.getMatrix().length != 4 || other.getMatrix()[0].length != 4) {
+            throw new IllegalArgumentException("Both matrices must be 4x4 for multiplication.");
+        }
         final float[][] nevM = new float[4][4];
 
         for (int i = 0; i < matrix.length; i++) {
@@ -84,7 +89,6 @@ public class Matrix4X4 implements Matrix {
             }
         }
         return new Matrix4X4(nevM);
-
 
     }
 
