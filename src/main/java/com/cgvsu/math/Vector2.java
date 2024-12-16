@@ -8,7 +8,7 @@ public class Vector2 implements Vector {
 
     public Vector2(final float[] data) {
         if (data.length != 2) {
-            throw new IllegalArgumentException("Данный вектор не правильной размерности(ожидается размер 2)");
+            throw new IllegalArgumentException("Данный вектор неправильной размерности(ожидается размер 2)");
         }
         this.data = data;
     }
@@ -29,6 +29,9 @@ public class Vector2 implements Vector {
 
     @Override
     public Vector2 sum(Vector other) {
+        assert(other.cols == this.cols);
+        
+        
         if (!(other instanceof Vector2)) {
             throw new IllegalArgumentException("Переданный вектор не подходит по размеру(ожидается размер 2)");
         }

@@ -66,6 +66,7 @@ public class Vector4 implements Vector {
 
     }
 
+
     @Override
     public Vector4 divisionOnScalar(final float scalar) {
         final float newX = getData(0) / scalar;
@@ -96,6 +97,18 @@ public class Vector4 implements Vector {
         final float[] newData = {newX, newY, newZ, newW};
         return new Vector4(newData);
     }
+
+    public Vector3 normalizeTo3() {
+        final float newX = getData(0) / getData(3);
+        final float newY = getData(1) / getData(3);
+        final float newZ = getData(2) / getData(3);
+
+        final float[] newData = {newX, newY, newZ};
+        return new Vector3(newData
+
+        );
+    }
+
 
     @Override
     public float scalarProduct(Vector other) {
