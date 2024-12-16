@@ -29,9 +29,6 @@ public class Vector2 implements Vector {
 
     @Override
     public Vector2 sum(Vector other) {
-        assert(other.cols == this.cols);
-        
-        
         if (!(other instanceof Vector2)) {
             throw new IllegalArgumentException("Переданный вектор не подходит по размеру(ожидается размер 2)");
         }
