@@ -89,11 +89,11 @@ public final class Triangulator {
         triangle.getVertexIndices().add(b);
         triangle.getVertexIndices().add(c);
         
-        if (!polygon.getTextureVertexIndices().isEmpty()) {
-            triangle.getTextureVertexIndices().add(polygon.getTextureVertexIndices().get(a));
-            triangle.getTextureVertexIndices().add(polygon.getTextureVertexIndices().get(b));
-            triangle.getTextureVertexIndices().add(polygon.getTextureVertexIndices().get(c));
-        }
+//        if (!polygon.getTextureVertexIndices().isEmpty()) {
+//            triangle.getTextureVertexIndices().add(polygon.getTextureVertexIndices().get(a));
+//            triangle.getTextureVertexIndices().add(polygon.getTextureVertexIndices().get(b));
+//            triangle.getTextureVertexIndices().add(polygon.getTextureVertexIndices().get(c));
+//        }
         
         return triangle;
     }
