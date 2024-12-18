@@ -28,8 +28,6 @@ public final class Triangulator {
                     
                     break;
                 }
-                
-
             }
         }
         
