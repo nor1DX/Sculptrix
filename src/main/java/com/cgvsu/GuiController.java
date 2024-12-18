@@ -26,6 +26,7 @@ public class GuiController {
     final private float TRANSLATION = 0.5F;
     final private float SCALE = 0.4F;
     final private float ROTATION = 0.4F;
+    
     @FXML
     AnchorPane anchorPane;
 
@@ -35,12 +36,10 @@ public class GuiController {
     private Model mesh = null;
     float[] position = {0, 0, 100};
     float[] target = {0, 0, 0};
-    private Camera camera = new Camera(
-            new Vector3(position),
-
-            new Vector3(target),
-
-            1.0F, 1, 0.01F, 100);
+    private Camera camera = new Camera(new Vector3(position),
+                                       new Vector3(target),
+                                       1.0F, 1,
+                                       0.01F, 100);
 
     private Timeline timeline;
 
