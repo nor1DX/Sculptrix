@@ -1,18 +1,21 @@
 package com.cgvsu.model;
 
+import com.cgvsu.math.Vector2;
 import com.cgvsu.math.Vector2f;
 import com.cgvsu.math.Vector3;
 import com.cgvsu.math.Vector3f;
+import com.cgvsu.model.model_utils.NormalCalculator;
+import com.cgvsu.model.model_utils.Triangulator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Model {
 
     public ArrayList<Vector3> vertices = new ArrayList<Vector3>();
-    public ArrayList<Vector2f> textureVertices = new ArrayList<Vector2f>();
-    public ArrayList<Vector3f> normals = new ArrayList<Vector3f>();
+    public ArrayList<Vector2> textureVertices = new ArrayList<Vector2>();
+    public ArrayList<Vector3> normals = new ArrayList<Vector3>();
     public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
-
 
     float[] scaleM = {1, 1, 1};
     private Vector3 scale = new Vector3(scaleM);
@@ -22,9 +25,29 @@ public class Model {
 
     float [] translationM = {0,0,0};
     private Vector3 translation = new Vector3(translationM);
+    
+    public void prepareForRendering() {
+        triangulatePolygons();
+        recalculateNormals();
+    }
+    
+    private void triangulatePolygons() {
+        ArrayList<Polygon> newPolygons = new ArrayList<>();
+        
+        for (Polygon polygon : polygons)
+            newPolygons.addAll(Triangulator.triangulate(polygon, vertices));
+        
+        polygons = newPolygons;
+    }
+    
+    private void recalculateNormals() {
+        normals.clear();
+        
+        for (Polygon polygon : polygons)
+            normals.add(NormalCalculator.calculateNormal(polygon, vertices));
+    }
 
     public Vector3 getScale() {
-
         return scale;
     }
 

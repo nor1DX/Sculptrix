@@ -8,7 +8,7 @@ public class Vector2 implements Vector {
 
     public Vector2(final float[] data) {
         if (data.length != 2) {
-            throw new IllegalArgumentException("Данный вектор не правильной размерности(ожидается размер 2)");
+            throw new IllegalArgumentException("Данный вектор неправильной размерности(ожидается размер 2)");
         }
         this.data = data;
     }

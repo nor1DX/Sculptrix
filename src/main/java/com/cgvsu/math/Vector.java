@@ -16,6 +16,6 @@ public interface Vector {
 
     Vector normalize();
 
-    //скалярное произведение
+    // скалярное произведение
     float scalarProduct(Vector other);
 }
