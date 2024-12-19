@@ -7,7 +7,7 @@ import java.util.List;
 
 public final class NormalCalculator {
 
-    public static Vector3 calculateNormal(Polygon polygon, List<Vector3> vertices) {
+    public static Vector3 calculateNormal(final Polygon polygon, final List<Vector3> vertices) {
         Vector3 v1 = vertices.get(polygon.getVertexIndices().get(0));
         Vector3 v2 = vertices.get(polygon.getVertexIndices().get(1));
         Vector3 v3 = vertices.get(polygon.getVertexIndices().get(2));

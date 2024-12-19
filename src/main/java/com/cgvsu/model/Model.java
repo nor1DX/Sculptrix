@@ -7,7 +7,7 @@ import com.cgvsu.model.model_utils.Triangulator;
 
 import java.util.ArrayList;
 
-public class Model {
+public final class Model {
 
     public ArrayList<Vector3> vertices = new ArrayList<>();
     public ArrayList<Vector2> textureVertices = new ArrayList<>();
