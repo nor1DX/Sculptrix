@@ -25,24 +25,18 @@ public class Model {
 
     float [] translationM = {0,0,0};
     private Vector3 translation = new Vector3(translationM);
-    
     public void prepareForRendering() {
         triangulatePolygons();
         recalculateNormals();
     }
-    
     private void triangulatePolygons() {
         ArrayList<Polygon> newPolygons = new ArrayList<>();
-        
         for (Polygon polygon : polygons)
             newPolygons.addAll(Triangulator.triangulate(polygon, vertices));
-        
         polygons = newPolygons;
     }
-    
     private void recalculateNormals() {
         normals.clear();
-        
         for (Polygon polygon : polygons)
             normals.add(NormalCalculator.calculateNormal(polygon, vertices));
     }
@@ -74,7 +68,6 @@ public class Model {
     public void resetTransformations() {
         float[] scaleM = {1, 1, 1};
         setScale(new Vector3(scaleM));
-
         float [] rotationM = {0,0,0};
         setRotation(new Vector3(rotationM));
         float [] translationM = {0,0,0};
