@@ -126,7 +126,7 @@ public class GuiController {
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
 
-        float[] down = {0, TRANSLATION, 0};
+        float[] down = {0, -TRANSLATION, 0};
         camera.movePosition(new Vector3(down));
     }
 
