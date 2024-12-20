@@ -25,16 +25,19 @@ public class Model {
 
     float [] translationM = {0,0,0};
     private Vector3 translation = new Vector3(translationM);
+
     public void prepareForRendering() {
         triangulatePolygons();
         recalculateNormals();
     }
+
     private void triangulatePolygons() {
         ArrayList<Polygon> newPolygons = new ArrayList<>();
         for (Polygon polygon : polygons)
             newPolygons.addAll(Triangulator.triangulate(polygon, vertices));
         polygons = newPolygons;
     }
+
     private void recalculateNormals() {
         normals.clear();
         for (Polygon polygon : polygons)

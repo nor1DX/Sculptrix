@@ -25,8 +25,6 @@ import java.nio.file.Path;
 public class GuiController {
 
     final private float TRANSLATION = 0.5F;
-    final private float SCALE = 0.4F;
-    final private float ROTATION = 0.4F;
     @FXML
     AnchorPane anchorPane;
 
