@@ -12,7 +12,9 @@ public class Vector3 implements Vector {
         }
         this.data = data;
     }
-
+    public Vector3(final float x, final float y, final float z) {
+        this.data = new float[] {x, y, z};
+    }
 
 
 
@@ -26,6 +28,19 @@ public class Vector3 implements Vector {
     @Override
     public float getData(int index) {
         return data[index];
+    }
+
+    @Override
+    public void setData(int index, float value) {
+
+        if (index < 0 || index >= data.length) {
+            throw new IndexOutOfBoundsException("Индекс выходит за пределы диапазона [0, " + (data.length - 1) + "]");
+        }
+
+
+        // Устанавливаем новое значение
+        data[index] = value;
+
     }
 
     @Override
