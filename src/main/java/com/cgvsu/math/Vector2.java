@@ -25,7 +25,18 @@ public class Vector2 implements Vector {
     public float getData(int i) {
         return data[i];
     }
+    @Override
+    public void setData(int index, float value) {
 
+        if (index < 0 || index >= data.length) {
+            throw new IndexOutOfBoundsException("Индекс выходит за пределы диапазона [0, " + (data.length - 1) + "]");
+        }
+
+
+        // Устанавливаем новое значение
+        data[index] = value;
+
+    }
 
     @Override
     public Vector2 sum(Vector other) {

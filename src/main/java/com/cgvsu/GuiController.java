@@ -12,6 +12,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -23,6 +25,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class GuiController {
+
+    private double lastMouseX = 0;
+    private double lastMouseY = 0;
+    private boolean isMousePressed = false;
 
     final private float TRANSLATION = 0.5F;
     @FXML
@@ -65,8 +71,57 @@ public class GuiController {
 
         timeline.getKeyFrames().add(frame);
         timeline.play();
+
+        canvas.setOnMousePressed(event -> handleMousePressed(event));
+        canvas.setOnMouseDragged(event -> handleMouseDragged(event));
+        canvas.setOnMouseReleased(event -> handleMouseReleased(event));
+
+        canvas.setOnScroll(event -> handleMouseScroll(event));
     }
 
+    private void handleMousePressed(MouseEvent event) {
+        lastMouseX = event.getSceneX();
+        lastMouseY = event.getSceneY();
+        isMousePressed = true;
+    }
+
+    private void handleMouseDragged(MouseEvent event) {
+        if (isMousePressed) {
+            double deltaX = event.getSceneX() - lastMouseX;
+            double deltaY = event.getSceneY() - lastMouseY;
+
+
+            updateCameraRotation(deltaX, deltaY);
+
+            lastMouseX = event.getSceneX();
+            lastMouseY = event.getSceneY();
+        }
+    }
+
+    private void handleMouseReleased(MouseEvent event) {
+        isMousePressed = false;
+    }
+
+    private void updateCameraRotation(double deltaX, double deltaY) {
+        float sensitivity = 0.2f;
+        float yaw = (float) (-deltaX * sensitivity);
+        float pitch = (float) (-deltaY * sensitivity);
+        float roll = (float) (deltaY * sensitivity);
+
+
+        camera.rotateAroundTarget(yaw, pitch, roll);
+    }
+    private void handleMouseScroll(ScrollEvent event) {
+        double delta = event.getDeltaY();
+        float zoomFactor = 0.1f; // Увеличьте или уменьшите это значение для изменения скорости приближения/отдаления
+
+        // Вычисляем направление движения камеры
+        Vector3 direction = camera.getTarget().subtract(camera.getPosition()).normalize();
+
+        // Изменяем положение камеры
+        Vector3 newPosition = camera.getPosition().sum(direction.multiplyOnScalar((float) delta * zoomFactor));
+        camera.setPosition(newPosition);
+    }
 
     @FXML
     private void onOpenModelMenuItemClick() {
@@ -118,28 +173,33 @@ public class GuiController {
     @FXML
     private TextField textFieldTz;
 
+
+
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
-        float[] forward = {0F, 0F, -0.5F};
-        camera.movePosition(new Vector3(forward));
+        Vector3 direction = camera.getDirection();
+        camera.movePosition(direction.multiplyOnScalar(TRANSLATION));
     }
 
     @FXML
     public void handleCameraBackward(ActionEvent actionEvent) {
-        float[] backward = {0, 0, TRANSLATION};
-        camera.movePosition(new Vector3(backward));
+        Vector3 direction = camera.getDirection();
+        camera.movePosition(direction.multiplyOnScalar(-TRANSLATION));
     }
 
     @FXML
     public void handleCameraLeft(ActionEvent actionEvent) {
-        float[] left = {TRANSLATION, 0, 0};
-        camera.movePosition(new Vector3(left));
+        Vector3 direction = camera.getDirection();
+
+        Vector3 left = new Vector3(direction.getData(2), 0, -direction.getData(0)).normalize();
+        camera.movePosition(left.multiplyOnScalar(-TRANSLATION));
     }
 
     @FXML
     public void handleCameraRight(ActionEvent actionEvent) {
-        float[] right = {-TRANSLATION, 0, 0};
-        camera.movePosition(new Vector3(right));
+        Vector3 direction = camera.getDirection();
+        Vector3 right = new Vector3(-direction.getData(2), 0, direction.getData(0)).normalize();
+        camera.movePosition(right.multiplyOnScalar(TRANSLATION));
     }
 
     @FXML

@@ -2,9 +2,6 @@ package com.cgvsu.render_engine;
 
 import com.cgvsu.math.Matrix4X4;
 import com.cgvsu.math.Vector3;
-
-
-
 import javax.vecmath.Point2f;
 
 public class GraphicConveyor {
