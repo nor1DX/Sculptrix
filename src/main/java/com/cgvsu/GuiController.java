@@ -11,6 +11,9 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -23,10 +26,11 @@ import java.nio.file.Path;
 
 public class GuiController {
 
+    private double lastMouseX = 0;
+    private double lastMouseY = 0;
+    private boolean isMousePressed = false;
+
     final private float TRANSLATION = 0.5F;
-    final private float SCALE = 0.4F;
-    final private float ROTATION = 0.4F;
-    
     @FXML
     AnchorPane anchorPane;
 
@@ -36,10 +40,12 @@ public class GuiController {
     private Model mesh = null;
     float[] position = {0, 0, 100};
     float[] target = {0, 0, 0};
-    private Camera camera = new Camera(new Vector3(position),
-                                       new Vector3(target),
-                                       1.0F, 1,
-                                       0.01F, 100);
+    private Camera camera = new Camera(
+            new Vector3(position),
+
+            new Vector3(target),
+
+            1.0F, 1, 0.01F, 100);
 
     private Timeline timeline;
 
@@ -65,8 +71,57 @@ public class GuiController {
 
         timeline.getKeyFrames().add(frame);
         timeline.play();
+
+        canvas.setOnMousePressed(event -> handleMousePressed(event));
+        canvas.setOnMouseDragged(event -> handleMouseDragged(event));
+        canvas.setOnMouseReleased(event -> handleMouseReleased(event));
+
+        canvas.setOnScroll(event -> handleMouseScroll(event));
     }
 
+    private void handleMousePressed(MouseEvent event) {
+        lastMouseX = event.getSceneX();
+        lastMouseY = event.getSceneY();
+        isMousePressed = true;
+    }
+
+    private void handleMouseDragged(MouseEvent event) {
+        if (isMousePressed) {
+            double deltaX = event.getSceneX() - lastMouseX;
+            double deltaY = event.getSceneY() - lastMouseY;
+
+
+            updateCameraRotation(deltaX, deltaY);
+
+            lastMouseX = event.getSceneX();
+            lastMouseY = event.getSceneY();
+        }
+    }
+
+    private void handleMouseReleased(MouseEvent event) {
+        isMousePressed = false;
+    }
+
+    private void updateCameraRotation(double deltaX, double deltaY) {
+        float sensitivity = 0.2f;
+        float yaw = (float) (-deltaX * sensitivity);
+        float pitch = (float) (-deltaY * sensitivity);
+        float roll = (float) (deltaY * sensitivity);
+
+
+        camera.rotateAroundTarget(yaw, pitch, roll);
+    }
+    private void handleMouseScroll(ScrollEvent event) {
+        double delta = event.getDeltaY();
+        float zoomFactor = 0.1f; // Увеличьте или уменьшите это значение для изменения скорости приближения/отдаления
+
+        // Вычисляем направление движения камеры
+        Vector3 direction = camera.getTarget().subtract(camera.getPosition()).normalize();
+
+        // Изменяем положение камеры
+        Vector3 newPosition = camera.getPosition().sum(direction.multiplyOnScalar((float) delta * zoomFactor));
+        camera.setPosition(newPosition);
+    }
 
     @FXML
     private void onOpenModelMenuItemClick() {
@@ -91,29 +146,60 @@ public class GuiController {
         }
     }
 
+    @FXML
+    private TextField textFieldSx;
+
+    @FXML
+    private TextField textFieldSy;
+
+    @FXML
+    private TextField textFieldSz;
+
+    @FXML
+    private TextField textFieldRx;
+
+    @FXML
+    private TextField textFieldRy;
+
+    @FXML
+    private TextField textFieldRz;
+
+    @FXML
+    private TextField textFieldTx;
+
+    @FXML
+    private TextField textFieldTy;
+
+    @FXML
+    private TextField textFieldTz;
+
+
 
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
-        float[] forward = {0F, 0F, -0.5F};
-        camera.movePosition(new Vector3(forward));
+        Vector3 direction = camera.getDirection();
+        camera.movePosition(direction.multiplyOnScalar(TRANSLATION));
     }
 
     @FXML
     public void handleCameraBackward(ActionEvent actionEvent) {
-        float[] backward = {0, 0, TRANSLATION};
-        camera.movePosition(new Vector3(backward));
+        Vector3 direction = camera.getDirection();
+        camera.movePosition(direction.multiplyOnScalar(-TRANSLATION));
     }
 
     @FXML
     public void handleCameraLeft(ActionEvent actionEvent) {
-        float[] left = {TRANSLATION, 0, 0};
-        camera.movePosition(new Vector3(left));
+        Vector3 direction = camera.getDirection();
+
+        Vector3 left = new Vector3(direction.getData(2), 0, -direction.getData(0)).normalize();
+        camera.movePosition(left.multiplyOnScalar(-TRANSLATION));
     }
 
     @FXML
     public void handleCameraRight(ActionEvent actionEvent) {
-        float[] right = {-TRANSLATION, 0, 0};
-        camera.movePosition(new Vector3(right));
+        Vector3 direction = camera.getDirection();
+        Vector3 right = new Vector3(-direction.getData(2), 0, direction.getData(0)).normalize();
+        camera.movePosition(right.multiplyOnScalar(TRANSLATION));
     }
 
     @FXML
@@ -125,171 +211,95 @@ public class GuiController {
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
 
-        float[] down = {0, TRANSLATION, 0};
+        float[] down = {0, -TRANSLATION, 0};
         camera.movePosition(new Vector3(down));
     }
 
-
     @FXML
-    public void handleModelScaleX(ActionEvent actionEvent) {
-        if (mesh != null) {
-            Vector3 scale = mesh.getScale();
-            float[] scaleM = {scale.getData(0) + SCALE, scale.getData(1), scale.getData(2)};
-            mesh.setScale(new Vector3(scaleM));
-        }
-    }
+    public void handleModelTranslation(ActionEvent actionEvent) {
 
-    @FXML
-    public void handleModelScaleY(ActionEvent actionEvent) {
         if (mesh != null) {
-            Vector3 scale = mesh.getScale();
-            float[] scaleM = {scale.getData(0), scale.getData(1) + SCALE, scale.getData(2)};
-            mesh.setScale(new Vector3(scaleM));
-        }
-    }
-
-    @FXML
-    public void handleModelScaleZ(ActionEvent actionEvent) {
-        if (mesh != null) {
-            Vector3 scale = mesh.getScale();
-            float[] scaleM = {scale.getData(0), scale.getData(1), scale.getData(2) + SCALE};
-            mesh.setScale(new Vector3(scaleM));
-        }
-    }
-
-    @FXML
-    public void handleModelScaleXNegative(ActionEvent actionEvent) {
-        if (mesh != null) {
-            Vector3 scale = mesh.getScale();
-            float[] scaleM = {scale.getData(0) - SCALE, scale.getData(1), scale.getData(2)};
-            mesh.setScale(new Vector3(scaleM));
-        }
-    }
-
-    @FXML
-    public void handleModelScaleYNegative(ActionEvent actionEvent) {
-        if (mesh != null) {
-            Vector3 scale = mesh.getScale();
-            float[] scaleM = {scale.getData(0), scale.getData(1) - SCALE, scale.getData(2)};
-            mesh.setScale(new Vector3(scaleM));
-        }
-    }
-
-    @FXML
-    public void handleModelScaleZNegative(ActionEvent actionEvent) {
-        if (mesh != null) {
-            Vector3 scale = mesh.getScale();
-            float[] scaleM = {scale.getData(0), scale.getData(1), scale.getData(2) - SCALE};
-            mesh.setScale(new Vector3(scaleM));
-        }
-    }
-
-    @FXML
-    public void handleModelRotateX(ActionEvent actionEvent) {
-        if (mesh != null) {
-            Vector3 rotation = mesh.getRotation();
-            float[] rotateM = {rotation.getData(0) + ROTATION, rotation.getData(1), rotation.getData(2)};
-            mesh.setRotation(new Vector3(rotateM));
-        }
-    }
-
-    @FXML
-    public void handleModelRotateY(ActionEvent actionEvent) {
-        if (mesh != null) {
-            Vector3 rotation = mesh.getRotation();
-            float[] rotateM = {rotation.getData(0), rotation.getData(1) + ROTATION, rotation.getData(2)};
-            mesh.setRotation(new Vector3(rotateM));
-        }
-    }
-
-    @FXML
-    public void handleModelRotateZ(ActionEvent actionEvent) {
-        if (mesh != null) {
-            Vector3 rotation = mesh.getRotation();
-            float[] rotateM = {rotation.getData(0), rotation.getData(1), rotation.getData(2) + ROTATION};
-            mesh.setRotation(new Vector3(rotateM));
-        }
-    }
-
-    @FXML
-    public void handleModelRotateXNegative(ActionEvent actionEvent) {
-        if (mesh != null) {
-            Vector3 rotation = mesh.getRotation();
-            float[] rotateM = {rotation.getData(0) - ROTATION, rotation.getData(1), rotation.getData(2)};
-            mesh.setRotation(new Vector3(rotateM));
-        }
-    }
-
-    @FXML
-    public void handleModelRotateYNegative(ActionEvent actionEvent) {
-        if (mesh != null) {
-            Vector3 rotation = mesh.getRotation();
-            float[] rotateM = {rotation.getData(0), rotation.getData(1) - ROTATION, rotation.getData(2)};
-            mesh.setRotation(new Vector3(rotateM));
-        }
-    }
-
-    @FXML
-    public void handleModelRotateZNegative(ActionEvent actionEvent) {
-        if (mesh != null) {
-            Vector3 rotation = mesh.getRotation();
-            float[] rotateM = {rotation.getData(0), rotation.getData(1), rotation.getData(2) - ROTATION};
-            mesh.setRotation(new Vector3(rotateM));
-        }
-    }
-
-    @FXML
-    public void handleModelTranslateX(ActionEvent actionEvent) {
-        if (mesh != null) {
+            // текущий положение модели
             Vector3 translation = mesh.getTranslation();
-            float[] translateM = {translation.getData(0) + TRANSLATION, translation.getData(1), translation.getData(2)};
-            mesh.setTranslation(new Vector3(translateM));
+
+            // значения из текстовых полей, если они не пустые, иначе используем 0
+            float tx = textFieldTx.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTx.getText());
+            float ty = textFieldTy.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTy.getText());
+            float tz = textFieldTz.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTz.getText());
+
+            // значения из текстовых полей к текущему положению
+            float[] newTranslation = {
+                    translation.getData(0) + tx,
+                    translation.getData(1) + ty,
+                    translation.getData(2) + tz
+            };
+
+            // новое положение модели
+            mesh.setTranslation(new Vector3(newTranslation));
         }
     }
 
     @FXML
-    public void handleModelTranslateY(ActionEvent actionEvent) {
+    public void handleModelScale(ActionEvent actionEvent) {
         if (mesh != null) {
-            Vector3 translation = mesh.getTranslation();
-            float[] translateM = {translation.getData(0), translation.getData(1) + TRANSLATION, translation.getData(2)};
-            mesh.setTranslation(new Vector3(translateM));
+            // текущий размер модели
+            Vector3 scale = mesh.getScale();
+
+            // значения из текстовых полей, если они не пустые, иначе используем 1
+            float sx = textFieldSx.getText().isEmpty() ? 1 : Float.parseFloat(textFieldSx.getText());
+            float sy = textFieldSy.getText().isEmpty() ? 1 : Float.parseFloat(textFieldSy.getText());
+            float sz = textFieldSz.getText().isEmpty() ? 1 : Float.parseFloat(textFieldSz.getText());
+
+            // значения из текстовых полей к текущему размеру
+            float[] newScale = {
+                    scale.getData(0) * sx,
+                    scale.getData(1) * sy,
+                    scale.getData(2) * sz
+            };
+
+            // новый размер модели
+            mesh.setScale(new Vector3(newScale));
         }
     }
 
     @FXML
-    public void handleModelTranslateZ(ActionEvent actionEvent) {
+    public void handleModelRotate(ActionEvent actionEvent) {
         if (mesh != null) {
-            Vector3 translation = mesh.getTranslation();
-            float[] translateM = {translation.getData(0), translation.getData(1), translation.getData(2) + TRANSLATION};
-            mesh.setTranslation(new Vector3(translateM));
+            // текущий поворот модели
+            Vector3 rotation = mesh.getRotation();
+
+            // значения из текстовых полей, если они не пустые, иначе используем 0
+            float rx = textFieldRx.getText().isEmpty() ? 0 : Float.parseFloat(textFieldRx.getText());
+            float ry = textFieldRy.getText().isEmpty() ? 0 : Float.parseFloat(textFieldRy.getText());
+            float rz = textFieldRz.getText().isEmpty() ? 0 : Float.parseFloat(textFieldRz.getText());
+
+            // значения из текстовых полей к текущему повороту
+            float[] newRotation = {
+                    rotation.getData(0) + rx,
+                    rotation.getData(1) + ry,
+                    rotation.getData(2) + rz
+            };
+
+            // новый поворот модели
+            mesh.setRotation(new Vector3(newRotation));
         }
     }
 
-    @FXML
-    public void handleModelTranslateXNegative(ActionEvent actionEvent) {
-        if (mesh != null) {
-            Vector3 translation = mesh.getTranslation();
-            float[] translateM = {translation.getData(0) - TRANSLATION, translation.getData(1), translation.getData(2)};
-            mesh.setTranslation(new Vector3(translateM));
-        }
+    public void handleLightColorChange(ActionEvent actionEvent) {
     }
 
-    @FXML
-    public void handleModelTranslateYNegative(ActionEvent actionEvent) {
-        if (mesh != null) {
-            Vector3 translation = mesh.getTranslation();
-            float[] translateM = {translation.getData(0), translation.getData(1) - TRANSLATION, translation.getData(2)};
-            mesh.setTranslation(new Vector3(translateM));
-        }
+    public void handleModelDelete(ActionEvent actionEvent) {
     }
 
-    @FXML
-    public void handleModelTranslateZNegative(ActionEvent actionEvent) {
-        if (mesh != null) {
-            Vector3 translation = mesh.getTranslation();
-            float[] translateM = {translation.getData(0), translation.getData(1), translation.getData(2) - TRANSLATION};
-            mesh.setTranslation(new Vector3(translateM));
-        }
+    public void handleModelHide(ActionEvent actionEvent) {
     }
 
+    public void handleLightCreate(ActionEvent actionEvent) {
+    }
+
+    public void handleLightDelete(ActionEvent actionEvent) {
+    }
+
+    public void handleLightHide(ActionEvent actionEvent) {
+    }
 }

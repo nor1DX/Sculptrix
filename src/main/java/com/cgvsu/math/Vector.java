@@ -4,6 +4,8 @@ public interface Vector {
 
     float getData(int index);
 
+    void setData(int index, float data);
+
     Vector sum(Vector other);
 
     Vector subtract(Vector other);

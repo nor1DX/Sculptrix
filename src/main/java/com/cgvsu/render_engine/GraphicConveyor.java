@@ -2,7 +2,6 @@ package com.cgvsu.render_engine;
 
 import com.cgvsu.math.Matrix4X4;
 import com.cgvsu.math.Vector3;
-
 import javax.vecmath.Point2f;
 
 public class GraphicConveyor {
@@ -60,6 +59,8 @@ public class GraphicConveyor {
         Matrix4X4 spinX = rotateX(angleX);
         Matrix4X4 spinY = rotateY(angleY);
         Matrix4X4 spinZ = rotateZ(angleZ);
+
+
 
 
         //return Matrix4X4.multiplyOnMatrix(rotateZ(angleZ), Matrix4X4.multiplyOnMatrix(rotateY(angleY), (rotateX(angleX)));
@@ -141,6 +142,6 @@ public class GraphicConveyor {
     }
 
     public static Point2f vertexToPoint(final Vector3 vertex, final int width, final int height) {
-        return new Point2f(vertex.getData(0) * width + width / 2.0F, -vertex.getData(1) * height + height / 2.0F);
+        return new Point2f(vertex.getData(0) * width + width / 2.0F, vertex.getData(1) * height + height / 2.0F);
     }
 }
