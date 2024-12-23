@@ -219,22 +219,19 @@ public class GuiController {
     public void handleModelTranslation(ActionEvent actionEvent) {
 
         if (mesh != null) {
-            // текущий положение модели
+
             Vector3 translation = mesh.getTranslation();
 
-            // значения из текстовых полей, если они не пустые, иначе используем 0
             float tx = textFieldTx.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTx.getText());
             float ty = textFieldTy.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTy.getText());
             float tz = textFieldTz.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTz.getText());
 
-            // значения из текстовых полей к текущему положению
             float[] newTranslation = {
                     translation.getData(0) + tx,
                     translation.getData(1) + ty,
                     translation.getData(2) + tz
             };
 
-            // новое положение модели
             mesh.setTranslation(new Vector3(newTranslation));
         }
     }

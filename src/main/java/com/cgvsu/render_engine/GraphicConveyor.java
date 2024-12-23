@@ -1,8 +1,9 @@
 package com.cgvsu.render_engine;
 
 import com.cgvsu.math.Matrix4X4;
+import com.cgvsu.math.Vector2;
 import com.cgvsu.math.Vector3;
-import javax.vecmath.Point2f;
+
 
 public class GraphicConveyor {
     public static Matrix4X4 scaleMatrix4f(float scaleX, float scaleY, float scaleZ) {
@@ -61,9 +62,6 @@ public class GraphicConveyor {
         Matrix4X4 spinZ = rotateZ(angleZ);
 
 
-
-
-        //return Matrix4X4.multiplyOnMatrix(rotateZ(angleZ), Matrix4X4.multiplyOnMatrix(rotateY(angleY), (rotateX(angleX)));
         return (Matrix4X4) spinX.multiplyOnMatrix(spinY).multiplyOnMatrix(spinZ);
     }
 
@@ -83,17 +81,12 @@ public class GraphicConveyor {
             float angleX, float angleY, float angleZ,
             float translationX, float translationY, float translationZ
     ) {
-        /*return Matrix4X4.multiply(
-
-                translationMatrix4X4(translationX,translationY,translationZ),
-
-                Matrix4X4.multiply(rotateMatrix4f(angleX,angleY,angleZ), scaleMatrix4f(scaleX,scaleY,scaleZ)));*/
 
         Matrix4X4 rotationMatrix = rotateMatrix4f(angleX, angleY, angleZ);
         Matrix4X4 scaleMatrix = scaleMatrix4f(scaleX, scaleY, scaleZ);
         Matrix4X4 translationMatrix = translationMatrix4X4(translationX, translationY, translationZ);
 
-        return  rotationMatrix.multiplyOnMatrix(scaleMatrix).multiplyOnMatrix(translationMatrix);
+        return translationMatrix.multiplyOnMatrix(rotationMatrix).multiplyOnMatrix(scaleMatrix);
     }
 
     public static Matrix4X4 rotateScaleTranslate() {
@@ -141,7 +134,7 @@ public class GraphicConveyor {
         return new Matrix4X4(matrixPerspective);
     }
 
-    public static Point2f vertexToPoint(final Vector3 vertex, final int width, final int height) {
-        return new Point2f(vertex.getData(0) * width + width / 2.0F, vertex.getData(1) * height + height / 2.0F);
+    public static Vector2 vertexToPoint(final Vector3 vertex, final int width, final int height) {
+        return new Vector2(vertex.getData(0) * width + width / 2.0F, vertex.getData(1) * height + height / 2.0F);
     }
 }

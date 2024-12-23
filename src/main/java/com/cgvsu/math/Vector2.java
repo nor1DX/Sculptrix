@@ -13,6 +13,11 @@ public class Vector2 implements Vector {
         this.data = data;
     }
 
+    public Vector2(final float x, final float y) {
+        this.data = new float[]{x, y};
+    }
+
+
     @Override
     public String toString() {
         return "Vector2{" +
@@ -25,6 +30,7 @@ public class Vector2 implements Vector {
     public float getData(int i) {
         return data[i];
     }
+
     @Override
     public void setData(int index, float value) {
 
@@ -84,7 +90,7 @@ public class Vector2 implements Vector {
 
     @Override
     public float length() {
-        return (float)  Math.sqrt(Math.pow(getData(0), 2) + Math.pow(getData(1), 2));
+        return (float) Math.sqrt(Math.pow(getData(0), 2) + Math.pow(getData(1), 2));
     }
 
     @Override
