@@ -1,14 +1,12 @@
 package com.cgvsu.model;
 
 import com.cgvsu.math.Vector2;
-import com.cgvsu.math.Vector2f;
 import com.cgvsu.math.Vector3;
-import com.cgvsu.math.Vector3f;
 import com.cgvsu.model.model_utils.NormalCalculator;
 import com.cgvsu.model.model_utils.Triangulator;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class Model {
 

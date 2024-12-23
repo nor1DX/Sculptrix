@@ -1,6 +1,7 @@
 package com.cgvsu.render_engine;
 
 import com.cgvsu.math.Matrix4X4;
+import com.cgvsu.math.Vector2;
 import com.cgvsu.math.Vector3;
 import com.cgvsu.math.Vector4;
 import com.cgvsu.model.Model;
@@ -37,7 +38,7 @@ public class RenderEngine {
         for (int polygonInd = 0; polygonInd < nPolygons; ++polygonInd) {
             final int nVerticesInPolygon = mesh.polygons.get(polygonInd).getVertexIndices().size();
 
-            ArrayList<Point2f> resultPoints = new ArrayList<>();
+            ArrayList<Vector2> resultPoints = new ArrayList<>();
             for (int vertexInPolygonInd = 0; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
 
                 Vector3 vertex = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(vertexInPolygonInd));
@@ -47,22 +48,23 @@ public class RenderEngine {
                 Vector4 vertexV = new Vector4(matrixVertex);
 
 
-                Point2f resultPoint = vertexToPoint(modelViewProjectionMatrix.multiplyOnVector(vertexV).normalizeTo3(), width, height);
+                Vector2 resultPoint = vertexToPoint(modelViewProjectionMatrix.multiplyOnVector(vertexV).normalizeTo3(), width, height);
 
                 resultPoints.add(resultPoint);
             }
 
             for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
-                graphicsContext.strokeLine(resultPoints.get(vertexInPolygonInd - 1).x,
-                                           resultPoints.get(vertexInPolygonInd - 1).y,
-                                           resultPoints.get(vertexInPolygonInd).x,
-                                           resultPoints.get(vertexInPolygonInd).y);
+                graphicsContext.strokeLine(resultPoints.get(vertexInPolygonInd - 1).getData(0),
+                                           resultPoints.get(vertexInPolygonInd - 1).getData(1),
+                                           resultPoints.get(vertexInPolygonInd).getData(0),
+                                           resultPoints.get(vertexInPolygonInd).getData(1));
             }
 
             if (nVerticesInPolygon > 0)
-                graphicsContext.strokeLine(resultPoints.get(nVerticesInPolygon - 1).x,
-                        resultPoints.get(nVerticesInPolygon - 1).y,
-                        resultPoints.get(0).x, resultPoints.get(0).y);
+                graphicsContext.strokeLine(resultPoints.get(nVerticesInPolygon - 1).getData(0),
+                        resultPoints.get(nVerticesInPolygon - 1).getData(1),
+                        resultPoints.get(0).getData(0),
+                        resultPoints.get(0).getData(1));
         }
     }
 }
