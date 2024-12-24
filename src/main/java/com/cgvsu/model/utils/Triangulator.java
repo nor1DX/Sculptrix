@@ -1,4 +1,4 @@
-package com.cgvsu.model.model_utils;
+package com.cgvsu.model.utils;
 
 import com.cgvsu.math.Vector3;
 import com.cgvsu.model.Polygon;
