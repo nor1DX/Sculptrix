@@ -189,9 +189,9 @@ public class ObjReader {
 			throw new ObjReaderException("Polygon has too few vertices.", lineInd);
 		}
 
-		ArrayList<Integer> onePolygonVertexIndices = new ArrayList<>();
-		ArrayList<Integer> onePolygonTextureVertexIndices = new ArrayList<>();
-		ArrayList<Integer> onePolygonNormalIndices = new ArrayList<>();
+		ArrayList<Integer> onePolygonVertexIndices = new ArrayList();
+		ArrayList<Integer> onePolygonTextureVertexIndices = new ArrayList<Integer>();
+		ArrayList<Integer> onePolygonNormalIndices = new ArrayList<Integer>();
 
 		for (String s : wordsInLineWithoutToken) {
 			parseFaceWord(s, onePolygonVertexIndices, onePolygonTextureVertexIndices, onePolygonNormalIndices, lineInd);
