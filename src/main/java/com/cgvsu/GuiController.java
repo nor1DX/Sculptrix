@@ -11,6 +11,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -219,12 +220,16 @@ public class GuiController {
     public void handleModelTranslation(ActionEvent actionEvent) {
 
         if (mesh != null) {
-
             Vector3 translation = mesh.getTranslation();
 
             float tx = textFieldTx.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTx.getText());
             float ty = textFieldTy.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTy.getText());
             float tz = textFieldTz.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTz.getText());
+
+            if (tx == 0 || ty == 0 || tz == 0) {
+                showErrorDialog("Ошибка", "Перемещение не может быть нулевым.");
+                return;
+            }
 
             float[] newTranslation = {
                     translation.getData(0) + tx,
@@ -234,6 +239,14 @@ public class GuiController {
 
             mesh.setTranslation(new Vector3(newTranslation));
         }
+    }
+
+    private void showErrorDialog(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML
@@ -246,6 +259,11 @@ public class GuiController {
             float sx = textFieldSx.getText().isEmpty() ? 1 : Float.parseFloat(textFieldSx.getText());
             float sy = textFieldSy.getText().isEmpty() ? 1 : Float.parseFloat(textFieldSy.getText());
             float sz = textFieldSz.getText().isEmpty() ? 1 : Float.parseFloat(textFieldSz.getText());
+
+            if (sx <= 0 || sy <= 0 || sz <= 0) {
+                showErrorDialog("Ошибка", "Масштабирование не может быть отрицательным или нулевым.");
+                return;
+            }
 
             // значения из текстовых полей к текущему размеру
             float[] newScale = {
@@ -270,6 +288,10 @@ public class GuiController {
             float ry = textFieldRy.getText().isEmpty() ? 0 : Float.parseFloat(textFieldRy.getText());
             float rz = textFieldRz.getText().isEmpty() ? 0 : Float.parseFloat(textFieldRz.getText());
 
+            if (rx == 0 || ry == 0 || rz == 0) {
+                showErrorDialog("Ошибка", "Поворот не может быть нулевым.");
+                return;
+            }
             // значения из текстовых полей к текущему повороту
             float[] newRotation = {
                     rotation.getData(0) + rx,
