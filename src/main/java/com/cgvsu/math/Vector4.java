@@ -117,9 +117,7 @@ public class Vector4 implements Vector {
         final float newZ = getData(2) / getData(3);
 
         final float[] newData = {newX, newY, newZ};
-        return new Vector3(newData
-
-        );
+        return new Vector3(newData);
     }
 
 

@@ -1,4 +1,4 @@
-package com.cgvsu.model.model_utils;
+package com.cgvsu.model.utils;
 
 import com.cgvsu.math.Vector3;
 import com.cgvsu.model.Polygon;
@@ -10,7 +10,7 @@ public final class Triangulator {
     
     private static final float EPSILON = 1e-6f;
 
-    public static List<Polygon> triangulate(Polygon polygon, List<Vector3> vertices) {
+    public static List<Polygon> triangulate(final Polygon polygon, final List<Vector3> vertices) {
         List<Polygon> triangles = new ArrayList<>();
         List<Integer> vertexIndices = new ArrayList<>(polygon.getVertexIndices());
         
@@ -38,7 +38,8 @@ public final class Triangulator {
         return triangles;
     }
     
-    protected static boolean isEar(List<Integer> vertexIndices, List<Vector3> vertices, int prev, int current, int next) {
+    protected static boolean isEar(final List<Integer> vertexIndices, final List<Vector3> vertices,
+                                   final int prev, final int current, final int next) {
         Vector3 a = vertices.get(prev);
         Vector3 b = vertices.get(current);
         Vector3 c = vertices.get(next);
@@ -64,7 +65,7 @@ public final class Triangulator {
     }
     
     
-    protected static boolean isPointInsideTriangle(Vector3 a, Vector3 b, Vector3 c, Vector3 p) {
+    protected static boolean isPointInsideTriangle(final Vector3 a, final Vector3 b, final Vector3 c, final Vector3 p) {
         float areaABC = calculateTriangleArea(a, b, c);
         
         float areaABP = calculateTriangleArea(a, b, p);
@@ -74,7 +75,7 @@ public final class Triangulator {
         return Math.abs(areaABC - (areaABP + areaBCP + areaCAP)) < EPSILON;
     }
     
-    protected static float calculateTriangleArea(Vector3 a, Vector3 b, Vector3 c) {
+    protected static float calculateTriangleArea(final Vector3 a, final Vector3 b, final Vector3 c) {
         Vector3 edge1 = b.subtract(a);
         Vector3 edge2 = c.subtract(a);
         float crossProduct = edge1.vectorProduct(edge2).length();
@@ -82,7 +83,7 @@ public final class Triangulator {
         return 0.5f * crossProduct;
     }
     
-    protected static Polygon createTriangle(Polygon polygon, int a, int b, int c) {
+    protected static Polygon createTriangle(final Polygon polygon, final int a, final int b, final int c) {
         Polygon triangle = new Polygon();
         
         triangle.getVertexIndices().add(a);
