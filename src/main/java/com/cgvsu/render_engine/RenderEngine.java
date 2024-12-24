@@ -17,21 +17,22 @@ public class RenderEngine {
     public static void render(final GraphicsContext graphicsContext,
                               final Camera camera, final Model mesh,
                               final int width, final int height) {
+        float[] ZBuffer = new float[width * height];
+        for (int i = 0; i < ZBuffer.length; i++)
+            ZBuffer[i] = Float.MAX_VALUE;
+        
         Matrix4X4 modelMatrix = rotateScaleTranslate(
                 mesh.getScale().getData(0), mesh.getScale().getData(1), mesh.getScale().getData(2),
                 mesh.getRotation().getData(0), mesh.getRotation().getData(1), mesh.getRotation().getData(2),
                 mesh.getTranslation().getData(0), mesh.getTranslation().getData(1), mesh.getTranslation().getData(2));
-
-
+        
         Matrix4X4 viewMatrix = camera.getViewMatrix();
 
         Matrix4X4 projectionMatrix = camera.getProjectionMatrix();
 
-
         Matrix4X4 t1 = viewMatrix.multiplyOnMatrix(modelMatrix);
 
         Matrix4X4 modelViewProjectionMatrix = projectionMatrix.multiplyOnMatrix(t1);
-
 
         final int nPolygons = mesh.polygons.size();
         for (int polygonInd = 0; polygonInd < nPolygons; ++polygonInd) {
@@ -39,13 +40,10 @@ public class RenderEngine {
 
             ArrayList<Point2f> resultPoints = new ArrayList<>();
             for (int vertexInPolygonInd = 0; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
-
                 Vector3 vertex = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(vertexInPolygonInd));
-
 
                 float[] matrixVertex = {vertex.getData(0), vertex.getData(1), vertex.getData(2),1 };
                 Vector4 vertexV = new Vector4(matrixVertex);
-
 
                 Point2f resultPoint = vertexToPoint(modelViewProjectionMatrix.multiplyOnVector(vertexV).normalizeTo3(), width, height);
 
@@ -61,8 +59,8 @@ public class RenderEngine {
 
             if (nVerticesInPolygon > 0)
                 graphicsContext.strokeLine(resultPoints.get(nVerticesInPolygon - 1).x,
-                        resultPoints.get(nVerticesInPolygon - 1).y,
-                        resultPoints.get(0).x, resultPoints.get(0).y);
+                                           resultPoints.get(nVerticesInPolygon - 1).y,
+                                           resultPoints.get(0).x, resultPoints.get(0).y);
         }
     }
 }
