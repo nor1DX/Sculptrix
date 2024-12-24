@@ -12,7 +12,7 @@ public final class Rasterizator {
     public static void rasterizeTriangle(final GraphicsContext graphicsContext, final float[] ZBuffer,
                                          final Vector3 v1, final Vector3 v2, final Vector3 v3,
                                          final Point2f p1, final Point2f p2, final Point2f p3,
-                                         final Color color, final int width, final int height) {
+                                         final Color color, final int width) {
         final float minX = Math.min(Math.min(p1.x, p2.x), p3.x);
         final float maxX = Math.max(Math.max(p1.x, p2.x), p3.x);
         final float minY = Math.min(Math.min(p1.y, p2.y), p3.y);
@@ -41,7 +41,7 @@ public final class Rasterizator {
     private static float[] calculateBarycentricCoordinate(final float x, final float y,
                                                             final Point2f p1, final Point2f p2, final Point2f p3) {
         float denominator = (p2.y - p3.y) * (p1.x - p3.x) +
-                            (p3.x - p2.x * (p1.y - p3.y));
+                            (p3.x - p2.x) * (p1.y - p3.y);
         
         if (denominator == 0)
             return null;
