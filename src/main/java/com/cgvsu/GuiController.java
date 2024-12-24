@@ -226,11 +226,6 @@ public class GuiController {
             float ty = textFieldTy.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTy.getText());
             float tz = textFieldTz.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTz.getText());
 
-            if (tx == 0 || ty == 0 || tz == 0) {
-                showErrorDialog("Ошибка", "Перемещение не может быть нулевым.");
-                return;
-            }
-
             float[] newTranslation = {
                     translation.getData(0) + tx,
                     translation.getData(1) + ty,
@@ -288,10 +283,6 @@ public class GuiController {
             float ry = textFieldRy.getText().isEmpty() ? 0 : Float.parseFloat(textFieldRy.getText());
             float rz = textFieldRz.getText().isEmpty() ? 0 : Float.parseFloat(textFieldRz.getText());
 
-            if (rx == 0 || ry == 0 || rz == 0) {
-                showErrorDialog("Ошибка", "Поворот не может быть нулевым.");
-                return;
-            }
             // значения из текстовых полей к текущему повороту
             float[] newRotation = {
                     rotation.getData(0) + rx,
