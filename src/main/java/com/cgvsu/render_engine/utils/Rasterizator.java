@@ -1,5 +1,6 @@
 package com.cgvsu.render_engine.utils;
 
+import com.cgvsu.math.Vector2;
 import com.cgvsu.math.Vector3;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -11,12 +12,12 @@ public final class Rasterizator {
     
     public static void rasterizeTriangle(final GraphicsContext graphicsContext, final float[] ZBuffer,
                                          final Vector3 v1, final Vector3 v2, final Vector3 v3,
-                                         final Point2f p1, final Point2f p2, final Point2f p3,
-                                         final Color color, final int width) {
-        final float minX = Math.min(Math.min(p1.x, p2.x), p3.x);
-        final float maxX = Math.max(Math.max(p1.x, p2.x), p3.x);
-        final float minY = Math.min(Math.min(p1.y, p2.y), p3.y);
-        final float maxY = Math.max(Math.max(p1.y, p2.y), p3.y);
+                                         final Vector2 p1, final Vector2 p2, final Vector2 p3,
+                                         final Color color, final int width, final int height) {
+        final int minX = Math.max(0, (int) Math.min(Math.min(p1.getData(0), p2.getData(0)), p3.getData(0)));
+        final int maxX = Math.min(width - 1, (int) Math.max(Math.max(p1.getData(0), p2.getData(0)), p3.getData(0)));
+        final int minY = Math.max(0, (int) Math.min(Math.min(p1.getData(1), p2.getData(1)), p3.getData(1)));
+        final int maxY = Math.min(height - 1, (int) Math.max(Math.max(p1.getData(1), p2.getData(1)), p3.getData(1)));
         
         for (float y = minY; y <= maxY; y++) {
             for (float x = minX; x <= maxX; x++) {
@@ -39,18 +40,18 @@ public final class Rasterizator {
     }
     
     private static float[] calculateBarycentricCoordinate(final float x, final float y,
-                                                            final Point2f p1, final Point2f p2, final Point2f p3) {
-        float denominator = (p2.y - p3.y) * (p1.x - p3.x) +
-                            (p3.x - p2.x) * (p1.y - p3.y);
+                                                            final Vector2 p1, final Vector2 p2, final Vector2 p3) {
+        float denominator = (p2.getData(1) - p3.getData(1)) * (p1.getData(0) - p3.getData(0)) +
+                            (p3.getData(0) - p2.getData(0)) * (p1.getData(1) - p3.getData(1));
         
         if (denominator == 0)
             return null;
         
-        float alpha = ((p2.y - p3.y) * (x - p3.x) +
-                       (p3.x - p2.x) * (y - p3.y))
+        float alpha = ((p2.getData(1) - p3.getData(1)) * (x - p3.getData(0)) +
+                       (p3.getData(0) - p2.getData(0)) * (y - p3.getData(1)))
                       / denominator;
-        float beta = ((p3.y - p1.y) * (x - p3.x) +
-                      (p1.x - p3.x) * (y - p3.y))
+        float beta = ((p3.getData(1) - p1.getData(1)) * (x - p3.getData(0)) +
+                      (p1.getData(0) - p3.getData(0)) * (y - p3.getData(1)))
                      / denominator;
         float gamma = 1 - alpha - beta;
         
