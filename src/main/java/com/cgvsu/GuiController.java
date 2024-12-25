@@ -12,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -24,12 +25,17 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuiController {
 
     private double lastMouseX = 0;
     private double lastMouseY = 0;
     private boolean isMousePressed = false;
+
+    private List<Model> models = new ArrayList<>(); // Список моделей
+    private Model selectedModel = null;
 
     final private float TRANSLATION = 0.5F;
     @FXML
@@ -59,15 +65,7 @@ public class GuiController {
         timeline.setCycleCount(Animation.INDEFINITE);
 
         KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {
-            double width = canvas.getWidth();
-            double height = canvas.getHeight();
-
-            canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
-            camera.setAspectRatio((float) (width / height));
-
-            if (mesh != null) {
-                RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
-            }
+            renderModels(); // Рендерим все модели
         });
 
         timeline.getKeyFrames().add(frame);
@@ -112,6 +110,7 @@ public class GuiController {
 
         camera.rotateAroundTarget(yaw, pitch, roll);
     }
+
     private void handleMouseScroll(ScrollEvent event) {
         double delta = event.getDeltaY();
         float zoomFactor = 0.1f; // Увеличьте или уменьшите это значение для изменения скорости приближения/отдаления
@@ -139,9 +138,11 @@ public class GuiController {
 
         try {
             String fileContent = Files.readString(fileName);
-            mesh = ObjReader.read(fileContent);
-            mesh.prepareForRendering();
-            // todo: обработка ошибок
+            Model newModel = ObjReader.read(fileContent);
+            newModel.prepareForRendering();
+            models.add(newModel);
+            modelListView.getItems().add(newModel); // Добавляем модель в список
+            selectedModel = newModel;
         } catch (IOException exception) {
 
         }
@@ -173,7 +174,6 @@ public class GuiController {
 
     @FXML
     private TextField textFieldTz;
-
 
 
     @FXML
@@ -216,24 +216,23 @@ public class GuiController {
         camera.movePosition(new Vector3(down));
     }
 
-    @FXML
-    public void handleModelTranslation(ActionEvent actionEvent) {
+    public void handleLightColorChange(ActionEvent actionEvent) {
+    }
 
-        if (mesh != null) {
-            Vector3 translation = mesh.getTranslation();
+    public void handleModelDelete(ActionEvent actionEvent) {
+        models.remove(selectedModel);
+        modelListView.getItems().remove(selectedModel);
+        selectedModel = null;
+        renderModels();
+    }
 
-            float tx = textFieldTx.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTx.getText());
-            float ty = textFieldTy.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTy.getText());
-            float tz = textFieldTz.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTz.getText());
+    public void handleLightCreate(ActionEvent actionEvent) {
+    }
 
-            float[] newTranslation = {
-                    translation.getData(0) + tx,
-                    translation.getData(1) + ty,
-                    translation.getData(2) + tz
-            };
+    public void handleLightDelete(ActionEvent actionEvent) {
+    }
 
-            mesh.setTranslation(new Vector3(newTranslation));
-        }
+    public void handleLightHide(ActionEvent actionEvent) {
     }
 
     private void showErrorDialog(String title, String message) {
@@ -245,12 +244,29 @@ public class GuiController {
     }
 
     @FXML
-    public void handleModelScale(ActionEvent actionEvent) {
-        if (mesh != null) {
-            // текущий размер модели
-            Vector3 scale = mesh.getScale();
+    public void handleModelTranslation(ActionEvent actionEvent) {
+        if (selectedModel != null) {
+            Vector3 translation = selectedModel.getTranslation();
 
-            // значения из текстовых полей, если они не пустые, иначе используем 1
+            float tx = textFieldTx.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTx.getText());
+            float ty = textFieldTy.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTy.getText());
+            float tz = textFieldTz.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTz.getText());
+
+            float[] newTranslation = {
+                    translation.getData(0) + tx,
+                    translation.getData(1) + ty,
+                    translation.getData(2) + tz
+            };
+
+            selectedModel.setTranslation(new Vector3(newTranslation));
+        }
+    }
+
+    @FXML
+    public void handleModelScale(ActionEvent actionEvent) {
+        if (selectedModel != null) {
+            Vector3 scale = selectedModel.getScale();
+
             float sx = textFieldSx.getText().isEmpty() ? 1 : Float.parseFloat(textFieldSx.getText());
             float sy = textFieldSy.getText().isEmpty() ? 1 : Float.parseFloat(textFieldSy.getText());
             float sz = textFieldSz.getText().isEmpty() ? 1 : Float.parseFloat(textFieldSz.getText());
@@ -260,56 +276,52 @@ public class GuiController {
                 return;
             }
 
-            // значения из текстовых полей к текущему размеру
             float[] newScale = {
                     scale.getData(0) * sx,
                     scale.getData(1) * sy,
                     scale.getData(2) * sz
             };
 
-            // новый размер модели
-            mesh.setScale(new Vector3(newScale));
+            selectedModel.setScale(new Vector3(newScale));
         }
     }
 
     @FXML
     public void handleModelRotate(ActionEvent actionEvent) {
-        if (mesh != null) {
-            // текущий поворот модели
-            Vector3 rotation = mesh.getRotation();
+        if (selectedModel != null) {
+            Vector3 rotation = selectedModel.getRotation();
 
-            // значения из текстовых полей, если они не пустые, иначе используем 0
             float rx = textFieldRx.getText().isEmpty() ? 0 : Float.parseFloat(textFieldRx.getText());
             float ry = textFieldRy.getText().isEmpty() ? 0 : Float.parseFloat(textFieldRy.getText());
             float rz = textFieldRz.getText().isEmpty() ? 0 : Float.parseFloat(textFieldRz.getText());
 
-            // значения из текстовых полей к текущему повороту
             float[] newRotation = {
                     rotation.getData(0) + rx,
                     rotation.getData(1) + ry,
                     rotation.getData(2) + rz
             };
 
-            // новый поворот модели
-            mesh.setRotation(new Vector3(newRotation));
+            selectedModel.setRotation(new Vector3(newRotation));
         }
     }
 
-    public void handleLightColorChange(ActionEvent actionEvent) {
+    @FXML
+    private ListView<Model> modelListView;
+
+    @FXML
+    private void handleModelSelection() {
+        selectedModel = modelListView.getSelectionModel().getSelectedItem();
     }
 
-    public void handleModelDelete(ActionEvent actionEvent) {
+    private void renderModels() {
+        double width = canvas.getWidth();
+        double height = canvas.getHeight();
+        canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
+        camera.setAspectRatio((float) (width / height));
+        for (Model model : models) {
+            RenderEngine.render(canvas.getGraphicsContext2D(), camera, model, (int) width, (int) height);
+        }
     }
 
-    public void handleModelHide(ActionEvent actionEvent) {
-    }
 
-    public void handleLightCreate(ActionEvent actionEvent) {
-    }
-
-    public void handleLightDelete(ActionEvent actionEvent) {
-    }
-
-    public void handleLightHide(ActionEvent actionEvent) {
-    }
 }
