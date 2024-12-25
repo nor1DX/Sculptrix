@@ -54,7 +54,7 @@
     <!-- Контейнер для выпадающих окон -->
     <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="30" spacing="10">
         <Label text="Список объектов" style="-fx-text-fill: white;"/>
-        <ListView fx:id="modelListView" onMouseClicked="#handleModelSelection" prefHeight="100"/>
+        <ListView fx:id="modelListView" onMouseClicked="#handleModelSelection" prefHeight="200"/>
 
         <!-- Выпадающее окно для трансформации -->
         <TitledPane fx:id="transformationsTitledPane" text="Трансформация" animated="false" expanded="false">
