@@ -131,5 +131,11 @@ public class Vector3 implements Vector {
         final float[] newData = {newX, -newY, newZ};
         return new Vector3(newData);
     }
+    public boolean equals(Vector3 other){
+        final float eps = 1e-7f;
+        return Math.abs(getData(0) - other.getData(0)) < eps &&
+                Math.abs(getData(1) - other.getData(1)) < eps &&
+                Math.abs(getData(2) - other.getData(2)) < eps;
+    }
 }
 

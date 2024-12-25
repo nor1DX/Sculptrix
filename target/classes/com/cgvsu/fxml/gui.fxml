@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
-<AnchorPane fx:id="anchorPane" xmlns:fx="http://javafx.com/fxml" fx:controller="com.cgvsu.GuiController" >
+<AnchorPane fx:id="anchorPane" xmlns:fx="http://javafx.com/fxml" fx:controller="com.cgvsu.GuiController" style="-fx-background-color: #888888;">
     <MenuBar>
         <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#onOpenModelMenuItemClick" text="Load Model">
@@ -53,6 +53,8 @@
 
     <!-- Контейнер для выпадающих окон -->
     <VBox AnchorPane.rightAnchor="0" AnchorPane.topAnchor="30" spacing="10">
+        <Label text="Список объектов" style="-fx-text-fill: white;"/>
+        <ListView fx:id="modelListView" onMouseClicked="#handleModelSelection" prefHeight="200"/>
 
         <!-- Выпадающее окно для трансформации -->
         <TitledPane fx:id="transformationsTitledPane" text="Трансформация" animated="false" expanded="false">
@@ -84,7 +86,7 @@
         </TitledPane>
 
         <!-- Выпадающее окно для отображения модели -->
-        <TitledPane fx:id="modelTitledPane" text="Отображение модели ЕЩЕ НЕ РАБОТАЕТ" animated="false" expanded="false">
+        <TitledPane fx:id="modelTitledPane" text="Отображение модели" animated="false" expanded="false">
             <VBox spacing="10">
                 <Label text="Отображение модели"/>
                 <HBox spacing="10">
@@ -92,15 +94,14 @@
                     <CheckBox text="Освещение"/>
                     <CheckBox text="Сетка"/>
                 </HBox>
-                <HBox>
+                <HBox spacing="10">
                     <Button text="Удалить" onAction="#handleModelDelete"/>
-                    <Button text="Скрыть" onAction="#handleModelHide"/>
                 </HBox>
             </VBox>
         </TitledPane>
 
         <!-- Выпадающее окно для света -->
-        <TitledPane fx:id="lightTitledPane" text="Свет ЕЩЕ НЕ РАБОТАЕТ" animated="false" expanded="false">
+        <TitledPane fx:id="lightTitledPane" text="Свет" animated="false" expanded="false" >
             <VBox spacing="10">
                 <Label text="Отображение модели"/>
                 <HBox spacing="10">
@@ -108,12 +109,12 @@
                     <TextField fx:id="lightFieldLy" promptText="Y" prefWidth="50"/>
                     <TextField fx:id="lightFieldLz" promptText="Z" prefWidth="50"/>
                 </HBox>
-                <HBox>
+                <HBox spacing="10">
                     <Button text="Создать" onAction="#handleLightCreate"/>
                     <Button text="Удалить" onAction="#handleLightDelete"/>
                     <Button text="Скрыть" onAction="#handleLightHide"/>
                 </HBox>
-                <HBox>
+                <HBox spacing="10">
                     <Label text="Цвет света:"/>
                     <ColorPicker fx:id="lightColorPicker" onAction="#handleLightColorChange"/>
                 </HBox>
