@@ -8,10 +8,10 @@ public class Camera {
 
     private Vector3 position;
     private Vector3 target;
-    private float fov;
+    private final float fov;
     private float aspectRatio;
-    private float nearPlane;
-    private float farPlane;
+    private final float nearPlane;
+    private final float farPlane;
 
     public Camera(final Vector3 position, final Vector3 target,
                   final float fov, final float aspectRatio,
@@ -44,19 +44,10 @@ public class Camera {
         return target;
     }
 
-    public void movePositionAndTarget(final Vector3 translation) {
-        this.position.sum(translation);
-        this.target.sum(translation);
-    }
-
     public void movePosition(final Vector3 translation) {
         this.position = this.position.sum(translation);
     }
 
-
-    public void moveTarget(final Vector3 translation) {
-        this.target.sum(target);
-    }
 
     Matrix4X4 getViewMatrix() {
         return GraphicConveyor.lookAt(position, target);
@@ -65,15 +56,15 @@ public class Camera {
     Matrix4X4 getProjectionMatrix() {
         return GraphicConveyor.perspective(fov, aspectRatio, nearPlane, farPlane);
     }
+
     public Vector3 getDirection() {
         return target.subtract(position).normalize();
     }
 
     public void rotateAroundTarget(float yaw, float pitch, float roll) {
-        // Ограничиваем pitch, чтобы камера не могла смотреть прямо вверх или вниз
+        //  Y (yaw) X (pitch)  Z (roll)
         pitch = Math.max(-90, Math.min(90, pitch));
 
-        // Вращение вокруг оси Y (yaw)
         Vector3 direction = target.subtract(position);
         float yawRad = (float) Math.toRadians(yaw);
         float cosYaw = (float) Math.cos(yawRad);
@@ -84,7 +75,6 @@ public class Camera {
         direction.setData(0, newX);
         direction.setData(2, newZ);
 
-        // Вращение вокруг оси X (pitch)
         float pitchRad = (float) Math.toRadians(pitch);
         float cosPitch = (float) Math.cos(pitchRad);
         float sinPitch = (float) Math.sin(pitchRad);
@@ -93,7 +83,7 @@ public class Camera {
         direction.setData(1, newY);
         direction.setData(2, newZ2);
 
-        // Вращение вокруг оси Z (roll)
+
         float rollRad = (float) Math.toRadians(roll);
         float cosRoll = (float) Math.cos(rollRad);
         float sinRoll = (float) Math.sin(rollRad);
@@ -102,7 +92,6 @@ public class Camera {
         direction.setData(0, newX2);
         direction.setData(1, newY2);
 
-        // Обновляем позицию камеры
         position = target.subtract(direction);
     }
 }

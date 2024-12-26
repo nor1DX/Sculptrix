@@ -2,6 +2,7 @@ package com.cgvsu;
 
 import com.cgvsu.math.Vector3;
 import com.cgvsu.model.Model;
+import com.cgvsu.model.Transform;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.render_engine.Camera;
 import com.cgvsu.render_engine.RenderEngine;
@@ -43,14 +44,11 @@ public class GuiController {
 
     @FXML
     private Canvas canvas;
+    ;
+    private final Camera camera = new Camera(
+            new Vector3(0, 0, 100),
 
-    private Model mesh = null;
-    float[] position = {0, 0, 100};
-    float[] target = {0, 0, 0};
-    private Camera camera = new Camera(
-            new Vector3(position),
-
-            new Vector3(target),
+            new Vector3(0, 0, 0),
 
             1.0F, 1, 0.01F, 100);
 
@@ -65,7 +63,7 @@ public class GuiController {
         timeline.setCycleCount(Animation.INDEFINITE);
 
         KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {
-            renderModels(); // Рендерим все модели
+            renderModels();
         });
 
         timeline.getKeyFrames().add(frame);
@@ -113,12 +111,10 @@ public class GuiController {
 
     private void handleMouseScroll(ScrollEvent event) {
         double delta = event.getDeltaY();
-        float zoomFactor = 0.1f; // Увеличьте или уменьшите это значение для изменения скорости приближения/отдаления
+        float zoomFactor = 0.1f; // сенса скролла
 
-        // Вычисляем направление движения камеры
         Vector3 direction = camera.getTarget().subtract(camera.getPosition()).normalize();
 
-        // Изменяем положение камеры
         Vector3 newPosition = camera.getPosition().sum(direction.multiplyOnScalar((float) delta * zoomFactor));
         camera.setPosition(newPosition);
     }
@@ -141,7 +137,7 @@ public class GuiController {
             Model newModel = ObjReader.read(fileContent);
             newModel.prepareForRendering();
             models.add(newModel);
-            modelListView.getItems().add(newModel); // Добавляем модель в список
+            modelListView.getItems().add(newModel);
             selectedModel = newModel;
         } catch (IOException exception) {
 
@@ -246,26 +242,31 @@ public class GuiController {
     @FXML
     public void handleModelTranslation(ActionEvent actionEvent) {
         if (selectedModel != null) {
-            Vector3 translation = selectedModel.getTranslation();
+
+            Transform transform = selectedModel.getTransform();
+            Vector3 translation = transform.getTranslation();
 
             float tx = textFieldTx.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTx.getText());
             float ty = textFieldTy.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTy.getText());
             float tz = textFieldTz.getText().isEmpty() ? 0 : Float.parseFloat(textFieldTz.getText());
 
-            float[] newTranslation = {
+            Vector3 newTranslation = new Vector3(
                     translation.getData(0) + tx,
                     translation.getData(1) + ty,
                     translation.getData(2) + tz
-            };
+            );
 
-            selectedModel.setTranslation(new Vector3(newTranslation));
+            transform.setTranslation(newTranslation);
+
         }
     }
 
     @FXML
     public void handleModelScale(ActionEvent actionEvent) {
         if (selectedModel != null) {
-            Vector3 scale = selectedModel.getScale();
+
+            Transform transform = selectedModel.getTransform();
+            Vector3 scale = transform.getScale();
 
             float sx = textFieldSx.getText().isEmpty() ? 1 : Float.parseFloat(textFieldSx.getText());
             float sy = textFieldSy.getText().isEmpty() ? 1 : Float.parseFloat(textFieldSy.getText());
@@ -276,32 +277,35 @@ public class GuiController {
                 return;
             }
 
-            float[] newScale = {
+            Vector3 newScale = new Vector3(
                     scale.getData(0) * sx,
                     scale.getData(1) * sy,
                     scale.getData(2) * sz
-            };
 
-            selectedModel.setScale(new Vector3(newScale));
+            );
+
+            transform.setScale(newScale);
         }
     }
 
     @FXML
     public void handleModelRotate(ActionEvent actionEvent) {
         if (selectedModel != null) {
-            Vector3 rotation = selectedModel.getRotation();
+
+            Transform transform = selectedModel.getTransform();
+            Vector3 rotation= transform.getRotation();
 
             float rx = textFieldRx.getText().isEmpty() ? 0 : Float.parseFloat(textFieldRx.getText());
             float ry = textFieldRy.getText().isEmpty() ? 0 : Float.parseFloat(textFieldRy.getText());
             float rz = textFieldRz.getText().isEmpty() ? 0 : Float.parseFloat(textFieldRz.getText());
 
-            float[] newRotation = {
+            Vector3 newRotation = new Vector3(
                     rotation.getData(0) + rx,
                     rotation.getData(1) + ry,
                     rotation.getData(2) + rz
-            };
+            );
 
-            selectedModel.setRotation(new Vector3(newRotation));
+            transform.setRotation(newRotation);
         }
     }
 

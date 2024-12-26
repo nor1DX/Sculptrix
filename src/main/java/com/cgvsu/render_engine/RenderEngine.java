@@ -6,11 +6,11 @@ import com.cgvsu.math.Vector3;
 import com.cgvsu.math.Vector4;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
+import com.cgvsu.model.Transform;
 import com.cgvsu.render_engine.utils.Rasterizator;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import javax.vecmath.Point2f;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,11 +25,16 @@ public class RenderEngine {
         float[] ZBuffer = new float[width * height];
         for (int i = 0; i < ZBuffer.length; i++)
             ZBuffer[i] = Float.MAX_VALUE;
-        
+
+        Transform transform = mesh.getTransform();
+        Vector3 scale = transform.getScale();
+        Vector3 rotation = transform.getRotation();
+        Vector3 translation = transform.getTranslation();
+
         Matrix4X4 modelMatrix = rotateScaleTranslate(
-                mesh.getScale().getData(0), mesh.getScale().getData(1), mesh.getScale().getData(2),
-                mesh.getRotation().getData(0), mesh.getRotation().getData(1), mesh.getRotation().getData(2),
-                mesh.getTranslation().getData(0), mesh.getTranslation().getData(1), mesh.getTranslation().getData(2));
+                scale.getData(0), scale.getData(1), scale.getData(2),
+                rotation.getData(0), rotation.getData(1), rotation.getData(2),
+                translation.getData(0), translation.getData(1), translation.getData(2));
 
         Matrix4X4 viewMatrix = camera.getViewMatrix();
         Matrix4X4 projectionMatrix = camera.getProjectionMatrix();
