@@ -62,7 +62,7 @@ public class GraphicConveyor {
         Matrix4X4 spinZ = rotateZ(angleZ);
 
 
-        return (Matrix4X4) spinX.multiplyOnMatrix(spinY).multiplyOnMatrix(spinZ);
+        return  spinX.multiplyOnMatrix(spinY).multiplyOnMatrix(spinZ);
     }
 
     public static Matrix4X4 translationMatrix4X4(float translationX, float translationY, float translationZ) {
